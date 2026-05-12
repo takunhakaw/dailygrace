@@ -19,26 +19,25 @@
             width: 100%; height: 100%;
             overflow: hidden;
             background: var(--bg-gradient);
-            font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
         #chat-window {
             display: flex;
             flex-direction: column;
-            height: 100dvh; /* 適應手機動態高度 */
+            height: 100dvh;
             width: 100vw;
         }
 
         header {
             background: var(--primary-gold);
-            /* 自動避開手機系統列/瀏海 */
             padding: calc(env(safe-area-inset-top) + 15px) 20px 15px 20px;
             text-align: center;
             color: white;
             font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 3px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             z-index: 10;
         }
 
@@ -49,13 +48,13 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.3);
             -webkit-overflow-scrolling: touch;
         }
 
         .msg {
             max-width: 85%;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border-radius: 20px;
             font-size: 1rem;
             line-height: 1.6;
@@ -65,56 +64,46 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .bot { align-self: flex-start; background: var(--bot-bubble); border-bottom-left-radius: 2px; color: #333; }
+        .bot { align-self: flex-start; background: var(--bot-bubble); border-bottom-left-radius: 2px; }
         .user { align-self: flex-end; background: var(--user-bubble); color: #2e7d32; border-bottom-right-radius: 2px; }
 
         .interpretation {
-            display: block; margin-top: 10px; font-size: 0.95rem; color: #555;
-            background: #fff9eb; padding: 12px; border-left: 4px solid var(--primary-gold); border-radius: 6px;
+            display: block; margin-top: 8px; font-size: 0.95rem; color: #555;
+            background: #fff9eb; padding: 12px; border-left: 4px solid var(--primary-gold); border-radius: 4px;
         }
 
-        .bible-ref { 
-            display: block; margin-top: 10px; font-size: 0.85rem; color: var(--primary-gold); 
-            font-weight: bold; border-top: 1px solid #eee; padding-top: 8px; 
-        }
+        .bible-ref { display: block; margin-top: 8px; font-size: 0.85rem; color: var(--primary-gold); font-weight: bold; border-top: 1px solid #eee; padding-top: 5px; }
 
-        .input-area {
+        .footer-area {
             background: white;
-            /* 自動避開手機底部手勢列/網址列 */
-            padding: 15px 15px calc(env(safe-area-inset-bottom) + 15px) 15px;
-            display: flex;
-            gap: 10px;
+            padding: 15px 20px calc(env(safe-area-inset-bottom) + 20px) 20px;
             border-top: 1px solid #eee;
+            display: flex;
+            justify-content: center;
         }
 
-        input {
-            flex: 1;
-            border: 2px solid #f0f0f0;
-            padding: 12px 20px;
-            border-radius: 30px;
-            font-size: 16px; /* 防止 iOS 縮放 */
-            outline: none;
-            transition: 0.2s;
-        }
-
-        input:focus { border-color: var(--primary-gold); }
-
-        button {
+        #draw-btn {
             background: var(--primary-gold);
             color: white;
             border: none;
-            padding: 0 25px;
-            border-radius: 30px;
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 0;
+            border-radius: 50px;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+            transition: transform 0.1s;
         }
 
-        button:active { transform: scale(0.95); }
+        #draw-btn:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -125,12 +114,11 @@
         <div class="msg bot">
             平安！主正看著你的努力 🌿<br>
             不管現在心裡在想什麼，上帝都有話對你說。<br><br>
-            請輸入 <b>/抽籤</b> 領取今日份的靈糧。
+            點擊下方按鈕，領取今日份的靈糧。
         </div>
     </div>
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="輸入 /抽籤 ..." onkeypress="if(event.key==='Enter')handleSend()">
-        <button onclick="handleSend()">阿們</button>
+    <div class="footer-area">
+        <button id="draw-btn" onclick="drawFortune()">🕊️ 點我抽籤領受恩典</button>
     </div>
 </div>
 
@@ -152,7 +140,7 @@
         { verse: "⚖️ **【交託籤】** 當將你的事交託耶和華，並倚靠祂，祂就必成全。🤲", ref: "詩篇 37:5", interp: "別再獨自扛著重擔徹夜難眠了。試著完全放手交給主，祂會以最完美的智慧為你成就。" },
         { verse: "🍭 **【良藥籤】** 憂心忡忡使人心沉重，一句良言使人心歡愉。👏", ref: "箴言 12:25", interp: "主今天想親口對你說聲：「辛苦了，我的孩子。」讓這句溫暖的話醫治你一整天的疲憊。" },
         { verse: "🌿 **【謙卑籤】** 凡自高的，必降為卑；自卑的，必升為高。🌸", ref: "馬太福音 23:12", interp: "保持一顆柔軟謙卑的心。當你願意退後一步尊榮他人時，上帝必會在最適當的時刻提拔你。" },
-        { verse: "🏗️ **【供應籤】** 神能照著運行在我們心裡的大力，充充足足地成就一切。🎁", ref: "以弗所書 3:20", interp: "上帝的恩典永遠超過你的想像！別用有限的視野限制了主，祂正預備超乎尋求的驚喜給你。" },
+        { verse: "🏗️ **【供應籤】** 神能照著運行在我們心裡的大力，充充足足地成就一切。🎁", ref: "以賽亞書 3:20", interp: "上帝的恩典永遠超過你的想像！別用有限的視野限制了主，祂正預備超乎尋求的驚喜給你。" },
         { verse: "👂 **【垂聽籤】** 我曾尋求耶和華，祂就應允我，救我脫離了一切的恐懼。⛅", ref: "詩篇 34:4", interp: "你的每一聲嘆息和禱告，主都沒有漏掉。把恐懼告訴祂，祂會用大能的雙手抱緊你。" },
         { verse: "🤝 **【彼此相愛籤】** 你們若有彼此相愛的心，眾人因此就認出你們是我的門徒了。😊", ref: "約翰福音 13:35", interp: "今天試著成為辦公室裡的祝福。當你遞出一杯溫水或一個微笑，就是活出主愛最好的證明。" },
         { verse: "☀️ **【光亮籤】** 你們是世上的光。讓主的光透過你的良善照亮辦公室吧。💡", ref: "馬太福音 5:14", interp: "你的專業、誠實與溫柔，就是上帝照進職場的光。別小看自己，你正在影響身邊的人。" },
@@ -163,33 +151,23 @@
         { verse: "🛤️ **【信心籤】** 因為我們行事為人是憑著信心，不是憑著眼見。👣", ref: "哥林多後書 5:7", interp: "雖然眼前的結果還不明朗，但信心就是相信上帝正在背後動工。繼續憑信心邁出下一步。" },
         { verse: "🍃 **【輕省籤】** 我的軛是容易的，我的擔子是輕省的。☁️", ref: "馬太福音 11:30", interp: "主不要你獨自埋頭苦幹。與祂同負一軛，你會發現原本沉重的任務，竟變得如此奇妙輕省。" },
         { verse: "🏹 **【得勝籤】** 感謝神，使我們藉著我們的主耶穌基督得勝。🏆", ref: "哥林多前書 15:57", interp: "所有的挫折都只是得勝的前奏。依靠主的恩典，你已經站在得勝的那一方，勇敢前進吧！" },
-        { verse: "💎 **【智慧籤】** 若有缺少智慧的，應當求那厚賜與眾人的神，祂必賜給他。🎓", ref: "雅各書 1:5", interp: "遇到棘手的難題了嗎？現在就向主祈求，祂會將超然的洞察力賜給你，讓你迎刃而解。" },
+        { verse: "💎 **【智慧籤】** 若有缺少智慧的，應當求那厚賜與眾人的神，祂必賜給他學。🎓", ref: "雅各書 1:5", interp: "遇到棘手的難題了嗎？現在就向主祈求，祂會將超然的洞察力賜給你，讓你迎刃而解。" },
         { verse: "💝 **【不息籤】** 愛是永不止息。上帝的愛依然環繞著你，溫暖你的心。🕯️", ref: "哥林多前書 13:8", interp: "即使世界冷漠，上帝的愛也永不落空。讓這份愛成為你的盔甲，保護你度過低谷。" },
         { verse: "🌠 **【結局籤】** 我為你們所懷的意念是賜平安的意念，要叫你們末後有指望。🌟", ref: "耶利米書 29:11", interp: "上帝對你的計畫從不是傷害。請放心相信，祂正引領你走向一個充滿光明的祝福終點。" }
     ];
 
-    function handleSend() {
-        const input = document.getElementById('userInput');
-        const text = input.value.trim();
-        if (!text) return;
+    function drawFortune() {
+        const chatBox = document.getElementById('chat-box');
+        
+        // 模擬使用者點擊動作（可選，增加互動感）
+        appendMsg('user', '🕊️ 領受恩典');
 
-        appendMsg('user', text);
-        input.value = "";
-
+        // 隨機抽選
         setTimeout(() => {
-            if (text === "/抽籤") {
-                const item = fortunes[Math.floor(Math.random() * fortunes.length)];
-                const content = `
-                    🙏 <b>今日恩典：</b><br><br>
-                    ${item.verse}<br>
-                    <span class='interpretation'>💡 <b>【解籤】</b><br>${item.interp}</span>
-                    <span class='bible-ref'>— ${item.ref}</span>
-                `;
-                appendMsg('bot', content);
-            } else {
-                appendMsg('bot', "主聽見你的聲音了！請輸入 <b>/抽籤</b> 領取指引 🌿");
-            }
-        }, 600);
+            const item = fortunes[Math.floor(Math.random() * fortunes.length)];
+            const content = `🙏 <b>今日恩典：</b><br><br>${item.verse}<br><span class='interpretation'>💡 <b>【解籤】</b><br>${item.interp}</span><span class='bible-ref'>— ${item.ref}</span>`;
+            appendMsg('bot', content);
+        }, 400);
     }
 
     function appendMsg(type, content) {
@@ -198,11 +176,9 @@
         msgDiv.className = `msg ${type}`;
         msgDiv.innerHTML = content;
         chatBox.appendChild(msgDiv);
-        // 自動捲動到底部
-        chatBox.scrollTo({
-            top: chatBox.scrollHeight,
-            behavior: 'smooth'
-        });
+        
+        // 滾動到底部
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 </script>
 
