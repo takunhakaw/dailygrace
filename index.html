@@ -118,7 +118,7 @@
         </div>
     </div>
     <div class="footer-area">
-        <button id="draw-btn" onclick="drawFortune()">🕊️ 點我抽籤領受恩典</button>
+        <button id="draw-btn" onclick="drawFortune()">🕊️ 點我領受恩典</button>
     </div>
 </div>
 
@@ -165,7 +165,7 @@
         // 隨機抽選
         setTimeout(() => {
             const item = fortunes[Math.floor(Math.random() * fortunes.length)];
-            const content = `🙏 <b>今日恩典：</b><br><br>${item.verse}<br><span class='interpretation'>💡 <b>【解籤】</b><br>${item.interp}</span><span class='bible-ref'>— ${item.ref}</span>`;
+            const content = `🙏 <b>今日恩典：</b><br><br>${item.verse}<br><span class='interpretation'>💡 <b>【親愛的孩子】</b><br>${item.interp}</span><span class='bible-ref'>— ${item.ref}</span>`;
             appendMsg('bot', content);
         }, 400);
     }
