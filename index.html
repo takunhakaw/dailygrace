@@ -1,0 +1,123 @@
+<style>
+    :root {
+        --primary-gold: #c5a059;
+        --bg-gradient: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+        --bot-bubble: #ffffff;
+        --user-bubble: #e8f5e9;
+        --text-color: #3e3e3e;
+    }
+
+    * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent; /* 移除手機點擊陰影 */
+    }
+
+    body {
+        font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+        background: var(--bg-gradient);
+        /* 解決 iOS 橡皮筋回彈問題 */
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        overflow: hidden;
+        margin: 0;
+    }
+
+    #chat-window {
+        width: 100vw;
+        height: 100dvh; /* 動態抓取手機螢幕高度，排除網址列影響 */
+        background: rgba(255, 255, 255, 0.95);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    header {
+        background: var(--primary-gold);
+        /* 修正：增加頂部內距，避開手機系統列 */
+        padding: calc(env(safe-area-inset-top) + 15px) 20px 15px 20px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: white;
+        letter-spacing: 3px;
+        flex-shrink: 0; /* 確保標題不被縮放 */
+    }
+
+    #chat-box {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background-color: #fafafa;
+        -webkit-overflow-scrolling: touch; /* 讓手機捲動更順暢 */
+    }
+
+    .msg {
+        max-width: 85%;
+        padding: 12px 16px;
+        border-radius: 18px;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .bot {
+        align-self: flex-start;
+        background: var(--bot-bubble);
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .user {
+        align-self: flex-end;
+        background: var(--user-bubble);
+        color: #2e7d32;
+    }
+
+    .interpretation {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: #666;
+        background: #fff9eb;
+        padding: 10px;
+        border-left: 4px solid var(--primary-gold);
+        border-radius: 4px;
+    }
+
+    .bible-ref {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: var(--primary-gold);
+        font-weight: bold;
+    }
+
+    .input-area {
+        padding: 15px 15px calc(env(safe-area-inset-bottom) + 15px) 15px; /* 修正：避開底部手勢列 */
+        background: white;
+        display: flex;
+        gap: 10px;
+        border-top: 1px solid #eee;
+    }
+
+    input {
+        flex: 1;
+        border: 1px solid #ddd;
+        padding: 10px 15px;
+        border-radius: 25px;
+        outline: none;
+        font-size: 16px; /* 設為 16px 防止 iOS 自動放大 */
+    }
+
+    button {
+        background: var(--primary-gold);
+        border: none;
+        color: white;
+        padding: 0 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+</style>
